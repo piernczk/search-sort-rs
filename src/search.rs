@@ -1,5 +1,21 @@
 use std::cmp::Ordering;
 
+/// An implementation of linear search.
+/// 
+/// Looks for the value in the slice by iterating over it. Returns the position
+/// of its first equal element, or [`None`] if not found.
+/// 
+/// `slice.iter().find(|&x| x == &value)` does almost the same thing.
+/// 
+/// # Examples
+/// 
+/// ```
+/// use search_sort::search;
+/// 
+/// let slice = [1, 85, 23, -4, 8];
+/// assert_eq!(search::linear(&slice, 23), Some(2));
+/// assert_eq!(search::linear(&slice, -77), None);
+/// ```
 pub fn linear<T: PartialEq>(slice: &[T], value: T) -> Option<usize> {
     for (i, v) in slice.iter().enumerate() {
         if &value == v {
