@@ -41,10 +41,26 @@ pub fn binary<T: Ord>(slice: &[T], value: &T) -> Option<usize> {
     }
 }
 
+pub fn binary_first<T: Ord>(slice: &[T], value: &T) -> Option<usize> {
+    let pos = binary(slice, value);
+    match pos {
+        Some(pos) => {
+            for (i, v) in slice[0..pos].iter().enumerate().rev() {
+                if v < value {
+                    return Some(i + 1);
+                }
+            }
+            Some(0)
+        },
+        None => None
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::linear;
     use super::binary;
+    use super::binary_first;
 
     #[test]
     fn linear_test() {
@@ -62,5 +78,11 @@ mod tests {
         assert_eq!(binary(&primes, &8), None);
         assert_eq!(binary(&primes, &0), None);
         assert_eq!(binary(&primes, &18), None);
+    }
+
+    #[test]
+    fn binary_first_test() {
+        assert_eq!(binary(&[1, 1, 2, 3], &1), Some(1));
+        assert_eq!(binary_first(&[1, 1, 2, 3], &1), Some(0));
     }
 }
