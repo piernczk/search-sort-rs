@@ -26,6 +26,31 @@ pub fn linear<T: PartialEq>(slice: &[T], value: &T) -> Option<usize> {
     None
 }
 
+/// An implementation of binary search.
+/// 
+/// Recursively searches for the value in a sorted slice. It does the following:
+/// * computes the center of the slice (size / 2),
+/// * compares it with the value,
+/// * if it's smaller, invokes itself with the first part of the slice,
+/// * if they are equal, returns the center,
+/// * if it's greater, invokes itself with the second part of the slice and
+///     adds the current center and 1.
+/// * if didn't find the value (center == 0 || center >= size - 1), returns
+///     [`None`].
+/// 
+/// **Note**: the returned value is the position of the first found element,
+/// that may not be the position of the first element in the whole slice. Use
+/// [`binary_first`] instead.
+/// 
+/// # Examples
+/// 
+/// ```
+/// use search_sort::search;
+/// 
+/// let slice = [1, 2, 4, 8, 16, 32];
+/// assert_eq!(search::binary(&slice, &8), Some(3));
+/// assert_eq!(search::binary(&slice, &3), None);
+/// ```
 pub fn binary<T: Ord>(slice: &[T], value: &T) -> Option<usize> {
     let mid = slice.len() / 2;
     match value.cmp(&slice[mid]) {
