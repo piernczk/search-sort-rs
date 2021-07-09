@@ -66,6 +66,24 @@ pub fn binary<T: Ord>(slice: &[T], value: &T) -> Option<usize> {
     }
 }
 
+/// An implementation of binary search that finds the very first position of
+/// the element.
+/// 
+/// Invokes [`binary`] search and iterates over the elements backward in
+/// the slice before the found element. Returns the position of the last equal
+/// element.
+/// 
+/// # Examples
+/// 
+/// ```
+/// use search_sort::search;
+/// 
+/// let fib = [1, 1, 2, 3];
+/// // the first found element is on position 1, since it doesn't checks the
+/// // elements before
+/// assert_eq!(search::binary(&fib, &1), Some(1));
+/// assert_eq!(search::binary_first(&fib, &1), Some(0));
+/// ```
 pub fn binary_first<T: Ord>(slice: &[T], value: &T) -> Option<usize> {
     let pos = binary(slice, value);
     match pos {
