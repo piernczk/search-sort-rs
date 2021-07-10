@@ -1,3 +1,16 @@
+/// An implementation of bubble sort.
+/// 
+/// Checks for every element if the next element is greater than this and swaps
+/// them if so. Then repeats the process until the list is sorted.
+/// 
+/// # Examples
+/// ```
+/// use search_sort::sort;
+/// 
+/// let mut slice = [1, 6, 3, -44, 11, 2];
+/// sort::bubble(&mut slice);
+/// assert_eq!(slice, [-44, 1, 2, 3, 6, 11]);
+/// ```
 pub fn bubble<T: Ord>(slice: &mut [T]) {
     let mut n = slice.len();
     while n > 1 {
