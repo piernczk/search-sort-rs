@@ -27,6 +27,12 @@ pub fn bubble<T: Ord>(slice: &mut [T]) {
     }
 }
 
+/// Part of quick sort algorithm.
+///
+/// Sets the pivot, places smaller elements before it and greater after it.
+/// Returns the final position of the pivot.
+///
+/// This function is used in [`quick`] sort.
 pub fn quick_partition<T: Ord>(slice: &mut [T]) -> usize {
     // 'the pivot' is the last element of the slice
 
@@ -57,6 +63,19 @@ pub fn quick_partition<T: Ord>(slice: &mut [T]) -> usize {
     lo
 }
 
+/// An implementation of quick sort.
+///
+/// Partitions the slice into two parts by [`quick_partition`], and invokes
+/// itself until the list is sorted.
+///
+/// # Examples
+/// ```
+/// use search_sort::sort;
+///
+/// let mut slice = [5, 1, -5, 3, 9, 2, 19];
+/// sort::quick(&mut slice);
+/// assert_eq!(slice, [-5, 1, 2, 3, 5, 9, 19]);
+/// ```
 pub fn quick<T: Ord>(slice: &mut [T]) {
     if slice.len() > 1 {
         let partition = quick_partition(slice);
