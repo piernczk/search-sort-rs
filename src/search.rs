@@ -79,7 +79,7 @@ pub fn binary<T: Ord>(slice: &[T], value: &T) -> Option<usize> {
 /// use search_sort::search;
 ///
 /// let fib = [1, 1, 2, 3];
-/// // the first found element is on position 1, since it doesn't checks the
+/// // the first found element is on position 1, since it doesn't check the
 /// // elements before
 /// assert_eq!(search::binary(&fib, &1), Some(1));
 /// assert_eq!(search::binary_first(&fib, &1), Some(0));
