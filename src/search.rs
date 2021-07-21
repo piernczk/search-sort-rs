@@ -1,3 +1,5 @@
+//! Implementations of searching algorithms.
+
 use std::cmp::Ordering;
 
 /// An implementation of linear search.

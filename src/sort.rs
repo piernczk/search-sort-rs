@@ -1,3 +1,5 @@
+//! Implementations of sorting algorithms.
+
 /// An implementation of bubble sort.
 ///
 /// Checks for every element if the next element is greater than this and swaps
