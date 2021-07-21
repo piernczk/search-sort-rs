@@ -8,7 +8,7 @@
 //! - [quick](sort::quick) sort
 //! 
 //! # Quick example
-//! ```
+//! ```no_run
 //! use search_sort::{search, sort};
 //! 
 //! let mut slice = [5, 1, 91, -45, 11, 5];
