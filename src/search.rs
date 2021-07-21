@@ -72,8 +72,8 @@ pub fn binary<T: Ord>(slice: &[T], value: &T) -> Option<usize> {
 /// the element.
 ///
 /// Invokes [`binary`] search and iterates over the elements backward in
-/// the slice before the found element. Returns the position of the last equal
-/// element.
+/// the slice before the found element. Returns the position of the last
+/// (first in the slice) equal element.
 ///
 /// # Examples
 ///
