@@ -13,7 +13,7 @@
 //! 
 //! let mut slice = [5, 1, 91, -45, 11, 5];
 //! sort::quick(&mut slice);
-//! assert_eq!(slice, [-45, 1, 5, 5, 9, 11]);
+//! assert_eq!(slice, [-45, 1, 5, 5, 11, 91]);
 //! 
 //! assert_eq!(Some(2), search::binary_first(&slice, &5));
 //! assert_eq!(None, search::binary_first(&slice, &42));
