@@ -101,6 +101,65 @@ pub fn binary_first<T: Ord>(slice: &[T], value: &T) -> Option<usize> {
     }
 }
 
+pub fn jump_step<T: Ord>(slice: &[T], value: &T, step: usize) -> Option<usize> {
+    if step == 1 {
+        return linear(slice, value);
+    } else if step == 0 {
+        // it would be stuck on the first element
+        if &slice[0] == value {
+            return Some(0);
+        } else {
+            return None;
+        }
+    }
+
+    let mut iter = slice.iter();
+    let mut pos: usize = 0;
+
+    // if found larger than the value
+    let mut found = false;
+
+    for i in 0..(slice.len() / step) {
+        match value.cmp(iter.next().unwrap()) {
+            Ordering::Less => {
+                if i == 0 {
+                    // smaller than every element
+                    return None;
+                }
+
+                found = true;
+                break;
+            }
+            Ordering::Equal => return Some(i * step),
+            Ordering::Greater => {
+                pos = i * step;
+                if i >= slice.len() {
+                    // larger than every element
+                    return None;
+                }
+            }
+        }
+
+        // Iterator::nth(...) adds 1 automatically; hence step - 1
+        // additionally, Iterator::next() is invoked above; thus step - 2
+        iter.nth(step - 2).unwrap();
+    }
+
+    let mut end = pos + step;
+    if !found {
+        // if did not found, then check the rest of the slice, since the loop
+        // may not have done it; plus pos + step could be higher than len - 1
+        end = slice.len()
+    }
+
+    // no need to check the element on pos
+    linear(&slice[(pos + 1)..end], value).map(|x| x + pos + 1)
+}
+
+pub fn jump<T: Ord>(slice: &[T], value: &T) -> Option<usize> {
+    jump_step(slice, value, (slice.len() as f64).sqrt() as usize)
+}
+
 #[cfg(test)]
 mod tests {
     use super::binary;
