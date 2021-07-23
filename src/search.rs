@@ -101,6 +101,16 @@ pub fn binary_first<T: Ord>(slice: &[T], value: &T) -> Option<usize> {
     }
 }
 
+/// An implementation of jump search with custom `step`.
+///
+/// Jumps over a sorted slice by fixed steps, until it finds the largest
+/// element, smaller than the value. Then invokes [linear] search from this
+/// element to the next step.
+///
+/// It's usually slower than `binary` search, except when the value is expected
+/// to be on the beggining of the slice.
+/// 
+/// See also [`jump`] function.
 pub fn jump_step<T: Ord>(slice: &[T], value: &T, step: usize) -> Option<usize> {
     if step == 1 {
         return linear(slice, value);
@@ -156,6 +166,18 @@ pub fn jump_step<T: Ord>(slice: &[T], value: &T, step: usize) -> Option<usize> {
     linear(&slice[(pos + 1)..end], value).map(|x| x + pos + 1)
 }
 
+/// An implementation of jump search with optimal `step`.
+/// 
+/// Invokes [`jump_step`] search with square root of the length of the slice.
+///
+/// # Examples
+///
+/// ```
+/// use search_sort::search;
+///
+/// let slice = [1, 5, 7, 15, 31, 32, 45];
+/// assert_eq!(search::jump(&slice, &15), Some(3));
+/// ```
 pub fn jump<T: Ord>(slice: &[T], value: &T) -> Option<usize> {
     jump_step(slice, value, (slice.len() as f64).sqrt() as usize)
 }
