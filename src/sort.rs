@@ -41,27 +41,43 @@ pub fn quick_partition<T: Ord>(slice: &mut [T]) -> usize {
     let n = slice.len();
     let mut lo = 0;
     let mut hi = n - 1;
+    let mut pivot = n - 1;
 
+    let mut equal = false;
     loop {
+        // always increments the counter if they're equal
+        if equal {
+            lo += 1;
+            equal = false;
+        }
+
         // search for an element greater or equal to the pivot
-        while slice[lo] < slice[n - 1] {
+        while slice[lo] < slice[pivot] {
             lo += 1;
         }
 
         // search for an element smaller or equal to the pivot
-        while hi > 0 && slice[hi] > slice[n - 1] {
+        while hi > 0 && slice[hi] > slice[pivot] {
             hi -= 1;
         }
 
         if lo >= hi {
             // the slice is sorted
             break;
+        } else if slice[lo] == slice[hi] {
+            equal = true;
         } else {
+            if lo == pivot {
+                pivot = hi;
+            } else if hi == pivot {
+                pivot = lo;
+            }
+
             slice.swap(lo, hi);
         }
     }
 
-    slice.swap(lo, n - 1);
+    slice.swap(lo, pivot);
     lo
 }
 
