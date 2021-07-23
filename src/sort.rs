@@ -42,7 +42,14 @@ pub fn quick_partition<T: Ord>(slice: &mut [T]) -> usize {
     let mut lo = 0;
     let mut hi = n - 1;
 
+    let mut equal = false;
     loop {
+        // always increments the counter if they're equal
+        if equal {
+            lo += 1;
+            equal = false;
+        }
+
         // search for an element greater or equal to the pivot
         while slice[lo] < slice[n - 1] {
             lo += 1;
@@ -56,6 +63,8 @@ pub fn quick_partition<T: Ord>(slice: &mut [T]) -> usize {
         if lo >= hi {
             // the slice is sorted
             break;
+        } else if slice[lo] == slice[hi] {
+            equal = true;
         } else {
             slice.swap(lo, hi);
         }
