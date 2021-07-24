@@ -109,7 +109,7 @@ pub fn binary_first<T: Ord>(slice: &[T], value: &T) -> Option<usize> {
 ///
 /// It's usually slower than `binary` search, except when the value is expected
 /// to be on the beggining of the slice.
-/// 
+///
 /// See also [`jump`] function.
 pub fn jump_step<T: Ord>(slice: &[T], value: &T, step: usize) -> Option<usize> {
     if step == 1 {
@@ -167,7 +167,7 @@ pub fn jump_step<T: Ord>(slice: &[T], value: &T, step: usize) -> Option<usize> {
 }
 
 /// An implementation of jump search with optimal `step`.
-/// 
+///
 /// Invokes [`jump_step`] search with square root of the length of the slice.
 /// It does `(len / step) + step - 1` comparisions at most; there would be the
 /// least of them if `step = sqrt(len)`.
@@ -209,8 +209,8 @@ pub fn exp<T: Ord>(slice: &[T], value: &T) -> Option<usize> {
         match value.cmp(&slice[i]) {
             Ordering::Less if i > 1 => break i / 2,
             Ordering::Equal => return Some(i),
-            Ordering::Greater if i < slice.len() - 1 => {},
-            _ => return None
+            Ordering::Greater if i < slice.len() - 1 => {}
+            _ => return None,
         }
 
         exp += 1;
@@ -223,8 +223,8 @@ pub fn exp<T: Ord>(slice: &[T], value: &T) -> Option<usize> {
 mod tests {
     use super::binary;
     use super::binary_first;
-    use super::linear;
     use super::jump;
+    use super::linear;
 
     #[test]
     fn linear_test() {
