@@ -184,6 +184,19 @@ pub fn jump<T: Ord>(slice: &[T], value: &T) -> Option<usize> {
     jump_step(slice, value, (slice.len() as f64).sqrt() as usize)
 }
 
+/// An implementation of exponential search.
+///
+/// Finds a range where the element may be found, and calls [`binary_first`] on
+/// it. This range is between a power of 2 and its next power.
+///
+/// # Examples
+///
+/// ```
+/// use search_sort::search;
+///
+/// let slice = [2, 4, 6, 7, 11, 12, 17];
+/// assert_eq!(search::exp(&slice, &6), Some(2));
+/// ```
 pub fn exp<T: Ord>(slice: &[T], value: &T) -> Option<usize> {
     if &slice[0] == value {
         // the loop doesn't check the first element
