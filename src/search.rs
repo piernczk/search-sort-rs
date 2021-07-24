@@ -101,10 +101,129 @@ pub fn binary_first<T: Ord>(slice: &[T], value: &T) -> Option<usize> {
     }
 }
 
+/// An implementation of jump search with custom `step`.
+///
+/// Jumps over a sorted slice by fixed steps, until it finds the largest
+/// element, smaller than the value. Then invokes [linear] search from this
+/// element to the next step.
+///
+/// It's usually slower than `binary` search, except when the value is expected
+/// to be on the beggining of the slice.
+///
+/// See also [`jump`] function.
+pub fn jump_step<T: Ord>(slice: &[T], value: &T, step: usize) -> Option<usize> {
+    if step == 1 {
+        return linear(slice, value);
+    } else if step == 0 {
+        // it would be stuck on the first element
+        if &slice[0] == value {
+            return Some(0);
+        } else {
+            return None;
+        }
+    }
+
+    let mut iter = slice.iter();
+    let mut pos: usize = 0;
+
+    // if found larger than the value
+    let mut found = false;
+
+    for i in 0..(slice.len() / step) {
+        match value.cmp(iter.next().unwrap()) {
+            Ordering::Less => {
+                if i == 0 {
+                    // smaller than every element
+                    return None;
+                }
+
+                found = true;
+                break;
+            }
+            Ordering::Equal => return Some(i * step),
+            Ordering::Greater => {
+                pos = i * step;
+                if i >= slice.len() {
+                    // larger than every element
+                    return None;
+                }
+            }
+        }
+
+        // Iterator::nth(...) adds 1 automatically; hence step - 1
+        // additionally, Iterator::next() is invoked above; thus step - 2
+        iter.nth(step - 2).unwrap();
+    }
+
+    let mut end = pos + step;
+    if !found {
+        // if did not found, then check the rest of the slice, since the loop
+        // may not have done it; plus pos + step could be higher than len - 1
+        end = slice.len()
+    }
+
+    // no need to check the element on pos
+    linear(&slice[(pos + 1)..end], value).map(|x| x + pos + 1)
+}
+
+/// An implementation of jump search with optimal `step`.
+///
+/// Invokes [`jump_step`] search with square root of the length of the slice.
+/// It does `(len / step) + step - 1` comparisions at most; there would be the
+/// least of them if `step = sqrt(len)`.
+///
+/// # Examples
+///
+/// ```
+/// use search_sort::search;
+///
+/// let slice = [1, 5, 7, 15, 31, 32, 45];
+/// assert_eq!(search::jump(&slice, &15), Some(3));
+/// ```
+pub fn jump<T: Ord>(slice: &[T], value: &T) -> Option<usize> {
+    jump_step(slice, value, (slice.len() as f64).sqrt() as usize)
+}
+
+/// An implementation of exponential search.
+///
+/// Finds a range where the element may be found, and calls [`binary_first`] on
+/// it. This range is between a power of 2 and its next power.
+///
+/// # Examples
+///
+/// ```
+/// use search_sort::search;
+///
+/// let slice = [2, 4, 6, 7, 11, 12, 17];
+/// assert_eq!(search::exp(&slice, &6), Some(2));
+/// ```
+pub fn exp<T: Ord>(slice: &[T], value: &T) -> Option<usize> {
+    if &slice[0] == value {
+        // the loop doesn't check the first element
+        return Some(0);
+    }
+
+    let mut exp = 0;
+    let start = loop {
+        let i = usize::pow(2, exp);
+        match value.cmp(&slice[i]) {
+            Ordering::Less if i > 1 => break i / 2,
+            Ordering::Equal => return Some(i),
+            Ordering::Greater if i < slice.len() - 1 => {}
+            _ => return None,
+        }
+
+        exp += 1;
+    };
+
+    binary_first(&slice[start..(start * 2)], value).map(|x| x + start)
+}
+
 #[cfg(test)]
 mod tests {
     use super::binary;
     use super::binary_first;
+    use super::jump;
     use super::linear;
 
     #[test]
@@ -129,5 +248,18 @@ mod tests {
     fn binary_first_test() {
         assert_eq!(binary(&[1, 1, 2, 3], &1), Some(1));
         assert_eq!(binary_first(&[1, 1, 2, 3], &1), Some(0));
+    }
+
+    #[test]
+    fn jump_test() {
+        assert_eq!(jump(&[2, 5, 6, 11], &5), Some(1));
+        assert_eq!(jump(&[2, 5, 6, 11], &4), None);
+    }
+
+    #[test]
+    fn exp_test() {
+        let slice = [-2, 0, 3, 6, 7, 12, 23, 25, 31, 41];
+        assert_eq!(jump(&slice, &12), Some(5));
+        assert_eq!(jump(&slice, &13), None);
     }
 }

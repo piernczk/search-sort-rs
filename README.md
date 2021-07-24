@@ -7,9 +7,8 @@ Searching algorithms to be implemented:
 
 - [x] linear search
 - [x] binary search
-- [ ] jump search
-- [ ] interpolation search
-- [ ] exponential search
+- [x] jump search
+- [x] exponential search
 
 Sorting algorithms to be implemented:
 
@@ -27,7 +26,7 @@ Add this to your `Cargo.toml` file:
 
 ```toml
 [dependencies]
-search-sort = "0.1"
+search-sort = "0.2"
 ```
 
 This code sorts the `slice` and searches for elements in it:

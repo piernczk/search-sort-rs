@@ -4,17 +4,19 @@
 //! Currently supported algorithms:
 //! - [linear](search::linear) search
 //! - [binary](search::binary) search
+//! - [jump](search::jump) search
+//! - [exponential](search::exp) search
 //! - [bubble](sort::bubble) sort
 //! - [quick](sort::quick) sort
-//! 
+//!
 //! # Quick example
 //! ```
 //! use search_sort::{search, sort};
-//! 
+//!
 //! let mut slice = [5, 1, 91, -45, 11, 5];
 //! sort::quick(&mut slice);
 //! assert_eq!(slice, [-45, 1, 5, 5, 11, 91]);
-//! 
+//!
 //! assert_eq!(Some(2), search::binary_first(&slice, &5));
 //! assert_eq!(None, search::binary_first(&slice, &42));
 //! ```
