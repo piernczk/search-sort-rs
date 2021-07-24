@@ -5,6 +5,7 @@
 //! - [linear](search::linear) search
 //! - [binary](search::binary) search
 //! - [jump](search::jump) search
+//! - [exponential](search::exp) search
 //! - [bubble](sort::bubble) sort
 //! - [quick](sort::quick) sort
 //! 
