@@ -187,6 +187,7 @@ mod tests {
     use super::binary;
     use super::binary_first;
     use super::linear;
+    use super::jump;
 
     #[test]
     fn linear_test() {
@@ -210,5 +211,11 @@ mod tests {
     fn binary_first_test() {
         assert_eq!(binary(&[1, 1, 2, 3], &1), Some(1));
         assert_eq!(binary_first(&[1, 1, 2, 3], &1), Some(0));
+    }
+
+    #[test]
+    fn jump_test() {
+        assert_eq!(jump(&[2, 5, 6, 11], &5), Some(1));
+        assert_eq!(jump(&[2, 5, 6, 11], &4), None);
     }
 }
