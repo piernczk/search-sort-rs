@@ -8,7 +8,6 @@ Searching algorithms to be implemented:
 - [x] linear search
 - [x] binary search
 - [x] jump search
-- [ ] interpolation search
 - [ ] exponential search
 
 Sorting algorithms to be implemented:
