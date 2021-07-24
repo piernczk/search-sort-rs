@@ -184,6 +184,28 @@ pub fn jump<T: Ord>(slice: &[T], value: &T) -> Option<usize> {
     jump_step(slice, value, (slice.len() as f64).sqrt() as usize)
 }
 
+pub fn exp<T: Ord>(slice: &[T], value: &T) -> Option<usize> {
+    if &slice[0] == value {
+        // the loop doesn't check the first element
+        return Some(0);
+    }
+
+    let mut exp = 0;
+    let start = loop {
+        let i = usize::pow(2, exp);
+        match value.cmp(&slice[i]) {
+            Ordering::Less if i > 1 => break i / 2,
+            Ordering::Equal => return Some(i),
+            Ordering::Greater if i < slice.len() - 1 => {},
+            _ => return None
+        }
+
+        exp += 1;
+    };
+
+    binary_first(&slice[start..(start * 2)], value).map(|x| x + start)
+}
+
 #[cfg(test)]
 mod tests {
     use super::binary;
@@ -219,5 +241,12 @@ mod tests {
     fn jump_test() {
         assert_eq!(jump(&[2, 5, 6, 11], &5), Some(1));
         assert_eq!(jump(&[2, 5, 6, 11], &4), None);
+    }
+
+    #[test]
+    fn exp_test() {
+        let slice = [-2, 0, 3, 6, 7, 12, 23, 25, 31, 41];
+        assert_eq!(jump(&slice, &12), Some(5));
+        assert_eq!(jump(&slice, &13), None);
     }
 }
