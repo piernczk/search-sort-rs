@@ -4,6 +4,7 @@
 //! Currently supported algorithms:
 //! - [linear](search::linear) search
 //! - [binary](search::binary) search
+//! - [jump](search::jump) search
 //! - [bubble](sort::bubble) sort
 //! - [quick](sort::quick) sort
 //! 

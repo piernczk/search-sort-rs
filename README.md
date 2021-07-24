@@ -7,7 +7,7 @@ Searching algorithms to be implemented:
 
 - [x] linear search
 - [x] binary search
-- [ ] jump search
+- [x] jump search
 - [ ] interpolation search
 - [ ] exponential search
 
