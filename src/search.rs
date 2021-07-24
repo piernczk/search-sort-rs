@@ -169,6 +169,8 @@ pub fn jump_step<T: Ord>(slice: &[T], value: &T, step: usize) -> Option<usize> {
 /// An implementation of jump search with optimal `step`.
 /// 
 /// Invokes [`jump_step`] search with square root of the length of the slice.
+/// It does `(len / step) + step - 1` comparisions at most; there would be the
+/// least of them if `step = sqrt(len)`.
 ///
 /// # Examples
 ///
