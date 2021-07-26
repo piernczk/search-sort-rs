@@ -59,10 +59,7 @@ pub fn binary<T: Ord>(slice: &[T], value: &T) -> Option<usize> {
         Ordering::Less if mid > 0 => binary(&slice[0..mid], value),
         Ordering::Equal => Some(mid),
         Ordering::Greater if mid < slice.len() - 1 => {
-            match binary(&slice[(mid + 1)..slice.len()], value) {
-                Some(x) => Some(x + mid + 1),
-                None => None,
-            }
+            binary(&slice[(mid + 1)..slice.len()], value).map(|x| x + mid + 1)
         }
         _ => None,
     }
