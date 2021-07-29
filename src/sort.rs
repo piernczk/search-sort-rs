@@ -44,6 +44,10 @@ pub fn is_sorted<T: Ord>(slice: &[T]) -> bool {
 /// assert_eq!(slice, [-44, 1, 2, 3, 6, 11]);
 /// ```
 pub fn bubble<T: Ord>(slice: &mut [T]) {
+    if test(slice) {
+        return;
+    }
+
     let mut n = slice.len();
     while n > 1 {
         let mut newn = 0;
@@ -125,11 +129,12 @@ pub fn quick_partition<T: Ord>(slice: &mut [T]) -> usize {
 /// assert_eq!(slice, [-5, 1, 2, 3, 5, 9, 19]);
 /// ```
 pub fn quick<T: Ord>(slice: &mut [T]) {
-    if slice.len() > 1 {
-        let partition = quick_partition(slice);
-        quick(&mut slice[..partition]);
-        quick(&mut slice[(partition + 1)..]);
+    if test(slice) {
+        return;
     }
+    let partition = quick_partition(slice);
+    quick(&mut slice[..partition]);
+    quick(&mut slice[(partition + 1)..]);
 }
 
 /// An implemetation of top-down (recursive) merge sort that uses only
@@ -147,55 +152,57 @@ pub fn quick<T: Ord>(slice: &mut [T]) {
 /// assert_eq!(slice, [-11, -10, -2, 0, 4, 7, 11]);
 /// ```
 pub fn merge<T: Ord + Clone>(slice: &mut [T]) {
-    if slice.len() > 1 {
-        let mid = slice.len() / 2;
+    if test(slice) {
+        return;
+    }
 
-        // copy first part to a new slice
-        let mut left = Vec::new();
-        left.extend_from_slice(&slice[..mid]);
-        let mut left = &mut left[..];
+    let mid = slice.len() / 2;
 
-        merge(&mut left);
-        merge(&mut slice[mid..]);
+    // copy first part to a new slice
+    let mut left = Vec::new();
+    left.extend_from_slice(&slice[..mid]);
+    let mut left = &mut left[..];
 
-        // merge the two parts
-        let mut i = 0;
-        let mut j = 0;
-        loop {
-            let midj = mid + j;
+    merge(&mut left);
+    merge(&mut slice[mid..]);
 
-            if i == mid {
-                // the slice is sorted, as the first part has been merged
-                break;
-            } else if midj == slice.len() {
-                // only the second half has been merged, so clone the remainging
-                // elements
-                slice[(mid + i)..].clone_from_slice(&left[i..]);
-                break;
+    // merge the two parts
+    let mut i = 0;
+    let mut j = 0;
+    loop {
+        let midj = mid + j;
+
+        if i == mid {
+            // the slice is sorted, as the first part has been merged
+            break;
+        } else if midj == slice.len() {
+            // only the second half has been merged, so clone the remainging
+            // elements
+            slice[(mid + i)..].clone_from_slice(&left[i..]);
+            break;
+        }
+
+        let ij = i + j;
+
+        match left[i].cmp(&slice[midj]) {
+            Ordering::Less => {
+                slice[ij] = left[i].clone();
+                i += 1;
             }
+            Ordering::Equal => {
+                // insert the two elements one by one, since they are equal
 
-            let ij = i + j;
+                let e = left[i].clone();
 
-            match left[i].cmp(&slice[midj]) {
-                Ordering::Less => {
-                    slice[ij] = left[i].clone();
-                    i += 1;
-                }
-                Ordering::Equal => {
-                    // insert the two elements one by one, since they are equal
+                slice[ij] = e.clone();
+                slice[ij + 1] = e;
 
-                    let e = left[i].clone();
-
-                    slice[ij] = e.clone();
-                    slice[ij + 1] = e;
-
-                    i += 1;
-                    j += 1;
-                }
-                Ordering::Greater => {
-                    slice[i + j] = slice[midj].clone();
-                    j += 1;
-                }
+                i += 1;
+                j += 1;
+            }
+            Ordering::Greater => {
+                slice[i + j] = slice[midj].clone();
+                j += 1;
             }
         }
     }
