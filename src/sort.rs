@@ -1,5 +1,7 @@
 //! Implementations of sorting algorithms.
 
+use std::cmp::Ordering;
+
 /// An implementation of bubble sort.
 ///
 /// Checks for every element if the next element is greater than this and swaps
@@ -102,9 +104,65 @@ pub fn quick<T: Ord>(slice: &mut [T]) {
     }
 }
 
+pub fn merge<T: Ord + Clone>(slice: &mut [T]) {
+    if slice.len() > 1 {
+        let mid = slice.len() / 2;
+
+        // copy first part to a new slice
+        let mut left = Vec::new();
+        left.extend_from_slice(&slice[..mid]);
+        let mut left = &mut left[..];
+
+        merge(&mut left);
+        merge(&mut slice[mid..]);
+
+        // merge the two parts
+        let mut i = 0;
+        let mut j = 0;
+        loop {
+            let midj = mid + j;
+
+            if i == mid {
+                // the slice is sorted, as the first part has been merged
+                break;
+            } else if midj == slice.len() {
+                // only the second half has been merged, so clone the remainging
+                // elements
+                slice[(mid + i)..].clone_from_slice(&left[i..]);
+                break;
+            }
+
+            let ij = i + j;
+
+            match left[i].cmp(&slice[midj]) {
+                Ordering::Less => {
+                    slice[ij] = left[i].clone();
+                    i += 1;
+                }
+                Ordering::Equal => {
+                    // insert the two elements one by one, since they are equal
+
+                    let e = left[i].clone();
+
+                    slice[ij] = e.clone();
+                    slice[ij + 1] = e;
+
+                    i += 1;
+                    j += 1;
+                }
+                Ordering::Greater => {
+                    slice[i + j] = slice[midj].clone();
+                    j += 1;
+                }
+            }
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::bubble;
+    use super::merge;
     use super::quick;
 
     #[test]
@@ -119,5 +177,20 @@ mod tests {
         let mut data = [6, 7, 3, 5, 4, -12];
         quick(&mut data);
         assert_eq!(data, [-12, 3, 4, 5, 6, 7]);
+    }
+
+    #[test]
+    fn merge_test() {
+        let mut data1 = [6, 1, 2, 99, -1, 13, 7, 1];
+        let mut data2 = [5, 7, 11, -1, 2, 3];
+        let mut data3 = [11, 16, 20, 12, 13, 15];
+
+        merge(&mut data1);
+        merge(&mut data2);
+        merge(&mut data3);
+
+        assert_eq!(data1, [-1, 1, 1, 2, 6, 7, 13, 99]);
+        assert_eq!(data2, [-1, 2, 3, 5, 7, 11]);
+        assert_eq!(data3, [11, 12, 13, 15, 16, 20]);
     }
 }
