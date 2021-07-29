@@ -15,8 +15,8 @@ Sorting algorithms to be implemented:
 - [x] bubble sort
 - [x] quick sort
   - [ ] parallel quick sort
+- [x] merge sort
 - [ ] insertion sort
-- [ ] merge sort
 - [ ] heap sort
 - [ ] radix sort
 
@@ -26,7 +26,7 @@ Add this to your `Cargo.toml` file:
 
 ```toml
 [dependencies]
-search-sort = "0.2"
+search-sort = "0.3"
 ```
 
 This code sorts the `slice` and searches for elements in it:

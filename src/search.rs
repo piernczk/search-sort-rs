@@ -1,5 +1,6 @@
 //! Implementations of searching algorithms.
 
+use crate::sort;
 use std::cmp::Ordering;
 
 /// An implementation of linear search.
@@ -54,15 +55,16 @@ pub fn linear<T: PartialEq>(slice: &[T], value: &T) -> Option<usize> {
 /// assert_eq!(search::binary(&slice, &3), None);
 /// ```
 pub fn binary<T: Ord>(slice: &[T], value: &T) -> Option<usize> {
+    if !sort::test(slice) {
+        return None;
+    }
+
     let mid = slice.len() / 2;
     match value.cmp(&slice[mid]) {
         Ordering::Less if mid > 0 => binary(&slice[0..mid], value),
         Ordering::Equal => Some(mid),
         Ordering::Greater if mid < slice.len() - 1 => {
-            match binary(&slice[(mid + 1)..slice.len()], value) {
-                Some(x) => Some(x + mid + 1),
-                None => None,
-            }
+            binary(&slice[(mid + 1)..slice.len()], value).map(|x| x + mid + 1)
         }
         _ => None,
     }
@@ -112,6 +114,10 @@ pub fn binary_first<T: Ord>(slice: &[T], value: &T) -> Option<usize> {
 ///
 /// See also [`jump`] function.
 pub fn jump_step<T: Ord>(slice: &[T], value: &T, step: usize) -> Option<usize> {
+    if !sort::test(slice) {
+        return None;
+    }
+
     if step == 1 {
         return linear(slice, value);
     } else if step == 0 {
@@ -198,6 +204,10 @@ pub fn jump<T: Ord>(slice: &[T], value: &T) -> Option<usize> {
 /// assert_eq!(search::exp(&slice, &6), Some(2));
 /// ```
 pub fn exp<T: Ord>(slice: &[T], value: &T) -> Option<usize> {
+    if !sort::test(slice) {
+        return None;
+    }
+
     if &slice[0] == value {
         // the loop doesn't check the first element
         return Some(0);
