@@ -104,6 +104,20 @@ pub fn quick<T: Ord>(slice: &mut [T]) {
     }
 }
 
+/// An implemetation of top-down (recursive) merge sort that uses only
+/// half of the space.
+///
+/// Invokes itself on the two halves, copies the first half of the slice and
+/// merges it into the original slice.
+///
+/// # Examples
+/// ```
+/// use search_sort::sort;
+///
+/// let mut slice = [4, -2, 7, 0, 11, -11, -10];
+/// sort::merge(&mut slice);
+/// assert_eq!(slice, [-11, -10, -2, 0, 4, 7, 11]);
+/// ```
 pub fn merge<T: Ord + Clone>(slice: &mut [T]) {
     if slice.len() > 1 {
         let mid = slice.len() / 2;
