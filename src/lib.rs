@@ -8,6 +8,7 @@
 //! - [exponential](search::exp) search
 //! - [bubble](sort::bubble) sort
 //! - [quick](sort::quick) sort
+//! - [merge](sort::merge) sort
 //!
 //! # Quick example
 //! ```

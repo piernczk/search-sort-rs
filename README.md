@@ -15,8 +15,8 @@ Sorting algorithms to be implemented:
 - [x] bubble sort
 - [x] quick sort
   - [ ] parallel quick sort
+- [x] merge sort
 - [ ] insertion sort
-- [ ] merge sort
 - [ ] heap sort
 - [ ] radix sort
 
