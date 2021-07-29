@@ -25,6 +25,11 @@ pub fn test<T: Ord>(slice: &[T]) -> bool {
     true
 }
 
+/// Alias for [`test()`].
+pub fn is_sorted<T: Ord>(slice: &[T]) -> bool {
+    test(slice)
+}
+
 /// An implementation of bubble sort.
 ///
 /// Checks for every element if the next element is greater than this and swaps
