@@ -2,6 +2,29 @@
 
 use std::cmp::Ordering;
 
+/// Checks if a slice is sorted.
+pub fn test<T: Ord>(slice: &[T]) -> bool {
+    if slice.len() < 2 {
+        return true;
+    }
+
+    let mut iter = slice.iter();
+    let mut prev = iter.next().unwrap();
+    let mut curr = iter.next();
+
+    while curr != None {
+        let value = curr.unwrap();
+        if prev > value {
+            return false;
+        }
+
+        prev = value;
+        curr = iter.next();
+    }
+
+    true
+}
+
 /// An implementation of bubble sort.
 ///
 /// Checks for every element if the next element is greater than this and swaps
@@ -178,6 +201,14 @@ mod tests {
     use super::bubble;
     use super::merge;
     use super::quick;
+    use super::test;
+
+    #[test]
+    fn test_test() {
+        // lol
+        assert!(test(&[0, 3, 4, 10, 12]));
+        assert!(!test(&[6, 2, 1, 10, -2]));
+    }
 
     #[test]
     fn bubble_test() {
